@@ -6,7 +6,7 @@
  */
 
 /* @flow */
-import { lightTheme, darkTheme } from '../../styles';
+import { lightTheme, darkTheme } from '../../styles.ts';
 
 let injectedCount = 0;
 const injectedCache = {};

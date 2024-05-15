@@ -10,7 +10,7 @@ import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import CompileErrorContainer from './containers/CompileErrorContainer';
 import RuntimeErrorContainer from './containers/RuntimeErrorContainer';
-import { overlayStyle } from './styles';
+import { overlayStyle } from './styles.ts';
 import { applyStyles, getTheme } from './utils/dom/css';
 
 let iframeRoot = null;

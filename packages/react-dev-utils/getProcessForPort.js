@@ -7,10 +7,10 @@
 
 'use strict';
 
-var chalk = require('chalk');
-var execSync = require('child_process').execSync;
-var execFileSync = require('child_process').execFileSync;
-var path = require('path');
+const pico = require('picocolors');
+const execSync = require('child_process').execSync;
+const execFileSync = require('child_process').execFileSync;
+const path = require('path');
 
 var execOptions = {
   encoding: 'utf8',
@@ -29,7 +29,7 @@ function getProcessIdOnPort(port) {
   return execFileSync(
     'lsof',
     ['-i:' + port, '-P', '-t', '-sTCP:LISTEN'],
-    execOptions
+    execOptions,
   )
     .split('\n')[0]
     .trim();
@@ -48,7 +48,7 @@ function getPackageNameInDirectory(directory) {
 function getProcessCommand(processId, processDirectory) {
   var command = execSync(
     'ps -o command -p ' + processId + ' | sed -n 2p',
-    execOptions
+    execOptions,
   );
 
   command = command.replace(/\n$/, '');
@@ -66,7 +66,7 @@ function getDirectoryOfProcessById(processId) {
     'lsof -p ' +
       processId +
       ' | awk \'$4=="cwd" {for (i=9; i<=NF; i++) printf "%s ", $i}\'',
-    execOptions
+    execOptions,
   ).trim();
 }
 
@@ -76,10 +76,10 @@ function getProcessForPort(port) {
     var directory = getDirectoryOfProcessById(processId);
     var command = getProcessCommand(processId, directory);
     return (
-      chalk.cyan(command) +
-      chalk.grey(' (pid ' + processId + ')\n') +
-      chalk.blue('  in ') +
-      chalk.cyan(directory)
+      pico.cyan(command) +
+      pico.gray(' (pid ' + processId + ')\n') +
+      pico.blue('  in ') +
+      pico.cyan(directory)
     );
   } catch (e) {
     return null;

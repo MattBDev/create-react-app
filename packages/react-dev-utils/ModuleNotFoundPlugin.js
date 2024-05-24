@@ -7,7 +7,7 @@
 
 'use strict';
 
-const chalk = require('chalk');
+const pico = require('picocolors');
 const findUp = require('find-up');
 const path = require('path');
 
@@ -49,7 +49,7 @@ class ModuleNotFoundPlugin {
       if (caseSensitivity) {
         const [, incorrectPath, actualName] = caseSensitivity;
         const actualFile = this.getRelativePath(
-          path.join(path.dirname(incorrectPath), actualName)
+          path.join(path.dirname(incorrectPath), actualName),
         );
         const incorrectName = path.basename(incorrectPath);
         err.message = `Cannot find file: '${incorrectName}' does not match the corresponding name on disk: '${actualFile}'.`;
@@ -74,8 +74,8 @@ class ModuleNotFoundPlugin {
           '',
           'You can install this package by running: ' +
             (isYarn
-              ? chalk.bold(`yarn add ${target}`)
-              : chalk.bold(`npm install ${target}`)) +
+              ? pico.bold(`yarn add ${target}`)
+              : pico.bold(`npm install ${target}`)) +
             '.',
         ];
       } else if (isFile) {

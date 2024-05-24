@@ -7,10 +7,10 @@
 
 'use strict';
 
-var chalk = require('chalk');
-var execSync = require('child_process').execSync;
-var spawn = require('cross-spawn');
-var open = require('open');
+const pico = require('picocolors');
+const execSync = require('child_process').execSync;
+const spawn = require('cross-spawn');
+const open = require('open');
 
 // https://github.com/sindresorhus/open#app
 var OSX_CHROME = 'google chrome';
@@ -52,11 +52,11 @@ function executeNodeScript(scriptPath, url) {
     if (code !== 0) {
       console.log();
       console.log(
-        chalk.red(
-          'The script specified as BROWSER environment variable failed.'
-        )
+        pico.red(
+          'The script specified as BROWSER environment variable failed.',
+        ),
       );
-      console.log(chalk.cyan(scriptPath) + ' exited with code ' + code + '.');
+      console.log(pico.cyan(scriptPath) + ' exited with code ' + code + '.');
       console.log();
       return;
     }
@@ -100,7 +100,7 @@ function startBrowserProcess(browser, url, args) {
           {
             cwd: __dirname,
             stdio: 'ignore',
-          }
+          },
         );
         return true;
       } catch (err) {

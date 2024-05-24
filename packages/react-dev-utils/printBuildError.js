@@ -7,11 +7,11 @@
 
 'use strict';
 
-const chalk = require('chalk');
+const pico = require('picocolors');
 
 module.exports = function printBuildError(err) {
-  const message = err != null && err.message;
-  const stack = err != null && err.stack;
+  const message = err?.message;
+  const stack = err?.stack;
 
   // Add more helpful message for Terser error
   if (
@@ -29,10 +29,10 @@ module.exports = function printBuildError(err) {
       const column = matched[4];
       console.log(
         'Failed to minify the code from this file: \n\n',
-        chalk.yellow(
-          `\t${problemPath}:${line}${column !== '0' ? ':' + column : ''}`
+        pico.yellow(
+          `\t${problemPath}:${line}${column !== '0' ? ':' + column : ''}`,
         ),
-        '\n'
+        '\n',
       );
     } catch (ignored) {
       console.log('Failed to minify the bundle.', err);

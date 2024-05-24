@@ -7,7 +7,7 @@
 
 'use strict';
 
-const chalk = require('chalk');
+const pico = require('picocolors');
 const path = require('path');
 const os = require('os');
 
@@ -51,7 +51,7 @@ class ModuleScopePlugin {
         }
         const requestFullPath = path.resolve(
           path.dirname(request.context.issuer),
-          request.__innerRequest_request
+          request.__innerRequest_request,
         );
         if (this.allowedFiles.has(requestFullPath)) {
           return callback();
@@ -75,20 +75,20 @@ class ModuleScopePlugin {
           })
         ) {
           const scopeError = new Error(
-            `You attempted to import ${chalk.cyan(
-              request.__innerRequest_request
-            )} which falls outside of the project ${chalk.cyan(
-              'src/'
+            `You attempted to import ${pico.cyan(
+              request.__innerRequest_request,
+            )} which falls outside of the project ${pico.cyan(
+              'src/',
             )} directory. ` +
-              `Relative imports outside of ${chalk.cyan(
-                'src/'
+              `Relative imports outside of ${pico.cyan(
+                'src/',
               )} are not supported.` +
               os.EOL +
-              `You can either move it inside ${chalk.cyan(
-                'src/'
-              )}, or add a symlink to it from project's ${chalk.cyan(
-                'node_modules/'
-              )}.`
+              `You can either move it inside ${pico.cyan(
+                'src/',
+              )}, or add a symlink to it from project's ${pico.cyan(
+                'node_modules/',
+              )}.`,
           );
           Object.defineProperty(scopeError, '__module_scope_plugin', {
             value: true,
@@ -99,7 +99,7 @@ class ModuleScopePlugin {
         } else {
           callback();
         }
-      }
+      },
     );
   }
 }

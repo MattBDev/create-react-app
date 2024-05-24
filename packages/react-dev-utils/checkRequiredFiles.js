@@ -7,24 +7,24 @@
 
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+const pico = require('picocolors');
 
 function checkRequiredFiles(files) {
   var currentFilePath;
   try {
     files.forEach(filePath => {
       currentFilePath = filePath;
-      fs.accessSync(filePath, fs.F_OK);
+      fs.accessSync(filePath, fs.constants.F_OK);
     });
     return true;
   } catch (err) {
     var dirName = path.dirname(currentFilePath);
     var fileName = path.basename(currentFilePath);
-    console.log(chalk.red('Could not find a required file.'));
-    console.log(chalk.red('  Name: ') + chalk.cyan(fileName));
-    console.log(chalk.red('  Searched in: ') + chalk.cyan(dirName));
+    console.log(pico.red('Could not find a required file.'));
+    console.log(pico.red('  Name: ') + pico.cyan(fileName));
+    console.log(pico.red('  Searched in: ') + pico.cyan(dirName));
     return false;
   }
 }

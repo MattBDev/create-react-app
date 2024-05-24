@@ -7,6 +7,6 @@
 
 'use strict';
 
-var immer = require('immer');
+const immer = require('immer');
 
 module.exports = immer;

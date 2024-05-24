@@ -16,11 +16,11 @@
 // that looks similar to our console output. The error overlay is inspired by:
 // https://github.com/glenjamin/webpack-hot-middleware
 
-var stripAnsi = require('strip-ansi');
-var url = require('url');
-var launchEditorEndpoint = require('./launchEditorEndpoint');
-var formatWebpackMessages = require('./formatWebpackMessages');
-var ErrorOverlay = require('react-error-overlay');
+const stripAnsi = require('strip-ansi');
+const url = require('url');
+const launchEditorEndpoint = require('./launchEditorEndpoint');
+const formatWebpackMessages = require('./formatWebpackMessages');
+const ErrorOverlay = require('react-error-overlay');
 
 ErrorOverlay.setEditorHandler(function editorHandler(errorLocation) {
   // Keep this sync with errorOverlayMiddleware.js
@@ -31,7 +31,7 @@ ErrorOverlay.setEditorHandler(function editorHandler(errorLocation) {
       '&lineNumber=' +
       window.encodeURIComponent(errorLocation.lineNumber || 1) +
       '&colNumber=' +
-      window.encodeURIComponent(errorLocation.colNumber || 1)
+      window.encodeURIComponent(errorLocation.colNumber || 1),
   );
 });
 
@@ -65,7 +65,7 @@ var connection = new WebSocket(
     // Hardcoded in WebpackDevServer
     pathname: process.env.WDS_SOCKET_PATH || '/ws',
     slashes: true,
-  })
+  }),
 );
 
 // Unlike WebpackDevServer client, we won't try to reconnect
@@ -74,7 +74,7 @@ var connection = new WebSocket(
 connection.onclose = function () {
   if (typeof console !== 'undefined' && typeof console.info === 'function') {
     console.info(
-      'The development server has disconnected.\nRefresh the page if necessary.'
+      'The development server has disconnected.\nRefresh the page if necessary.',
     );
   }
 };
@@ -131,7 +131,7 @@ function handleWarnings(warnings) {
         if (i === 5) {
           console.warn(
             'There were more warnings in other files.\n' +
-              'You can find a complete log in the terminal.'
+              'You can find a complete log in the terminal.',
           );
           break;
         }
@@ -203,6 +203,7 @@ connection.onmessage = function (e) {
       handleSuccess();
       break;
     case 'content-changed':
+    case 'static-changed':
       // Triggered when a file from `contentBase` changed.
       window.location.reload();
       break;
@@ -288,7 +289,7 @@ function tryApplyUpdates(onHotUpdateSuccess) {
       },
       function (err) {
         handleApplyUpdates(err, null);
-      }
+      },
     );
   }
 }

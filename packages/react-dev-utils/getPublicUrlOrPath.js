@@ -55,10 +55,10 @@ function getPublicUrlOrPath(isEnvDevelopment, homepage, envPublicUrl) {
         ? '/'
         : validHomepagePathname
       : // Some apps do not use client-side routing with pushState.
-      // For these, "homepage" can be set to "." to enable relative asset paths.
-      homepage.startsWith('.')
-      ? homepage
-      : validHomepagePathname;
+        // For these, "homepage" can be set to "." to enable relative asset paths.
+        homepage.startsWith('.')
+        ? homepage
+        : validHomepagePathname;
   }
 
   return '/';

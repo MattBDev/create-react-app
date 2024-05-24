@@ -7,7 +7,7 @@
 'use strict';
 
 const browserslist = require('browserslist');
-const chalk = require('chalk');
+const pico = require('picocolors');
 const os = require('os');
 const prompts = require('prompts');
 const pkgUp = require('pkg-up');
@@ -31,9 +31,9 @@ function shouldSetBrowsers(isInteractive) {
     type: 'confirm',
     name: 'shouldSetBrowsers',
     message:
-      chalk.yellow("We're unable to detect target browsers.") +
-      `\n\nWould you like to add the defaults to your ${chalk.bold(
-        'package.json'
+      pico.yellow("We're unable to detect target browsers.") +
+      `\n\nWould you like to add the defaults to your ${pico.bold(
+        'package.json',
       )}?`,
     initial: true,
   };
@@ -50,14 +50,14 @@ function checkBrowsers(dir, isInteractive, retry = true) {
   if (!retry) {
     return Promise.reject(
       new Error(
-        chalk.red(
-          'As of react-scripts >=2 you must specify targeted browsers.'
+        pico.red(
+          'As of react-scripts >=2 you must specify targeted browsers.',
         ) +
           os.EOL +
-          `Please add a ${chalk.underline(
-            'browserslist'
-          )} key to your ${chalk.bold('package.json')}.`
-      )
+          `Please add a ${pico.underline(
+            'browserslist',
+          )} key to your ${pico.bold('package.json')}.`,
+      ),
     );
   }
 
@@ -79,9 +79,9 @@ function checkBrowsers(dir, isInteractive, retry = true) {
           browserslist.clearCaches();
           console.log();
           console.log(
-            `${chalk.green('Set target browsers:')} ${chalk.cyan(
-              defaultBrowsers.join(', ')
-            )}`
+            `${pico.green('Set target browsers:')} ${pico.cyan(
+              defaultBrowsers.join(', '),
+            )}`,
           );
           console.log();
         })

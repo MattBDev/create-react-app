@@ -10,7 +10,7 @@ const address = require('address');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
-const chalk = require('chalk');
+const pico = require('picocolors');
 const detect = require('detect-port-alt');
 const isRoot = require('is-root');
 const prompts = require('prompts');
@@ -33,7 +33,7 @@ function prepareUrls(protocol, host, port, pathname = '/') {
     url.format({
       protocol,
       hostname,
-      port: chalk.bold(port),
+      port: pico.bold(port),
       pathname,
     });
 
@@ -49,7 +49,7 @@ function prepareUrls(protocol, host, port, pathname = '/') {
         // https://en.wikipedia.org/wiki/Private_network#Private_IPv4_address_spaces
         if (
           /^10[.]|^172[.](1[6-9]|2[0-9]|3[0-1])[.]|^192[.]168[.]/.test(
-            lanUrlForConfig
+            lanUrlForConfig,
           )
         ) {
           // Address is private, format it for later use
@@ -77,15 +77,15 @@ function prepareUrls(protocol, host, port, pathname = '/') {
 
 function printInstructions(appName, urls, useYarn) {
   console.log();
-  console.log(`You can now view ${chalk.bold(appName)} in the browser.`);
+  console.log(`You can now view ${pico.bold(appName)} in the browser.`);
   console.log();
 
   if (urls.lanUrlForTerminal) {
     console.log(
-      `  ${chalk.bold('Local:')}            ${urls.localUrlForTerminal}`
+      `  ${pico.bold('Local:')}            ${urls.localUrlForTerminal}`,
     );
     console.log(
-      `  ${chalk.bold('On Your Network:')}  ${urls.lanUrlForTerminal}`
+      `  ${pico.bold('On Your Network:')}  ${urls.lanUrlForTerminal}`,
     );
   } else {
     console.log(`  ${urls.localUrlForTerminal}`);
@@ -95,7 +95,7 @@ function printInstructions(appName, urls, useYarn) {
   console.log('Note that the development build is not optimized.');
   console.log(
     `To create a production build, use ` +
-      `${chalk.cyan(`${useYarn ? 'yarn' : 'npm run'} build`)}.`
+      `${pico.cyan(`${useYarn ? 'yarn' : 'npm run'} build`)}.`,
   );
   console.log();
 }
@@ -114,7 +114,7 @@ function createCompiler({
   try {
     compiler = webpack(config);
   } catch (err) {
-    console.log(chalk.red('Failed to compile.'));
+    console.log(pico.red('Failed to compile.'));
     console.log();
     console.log(err.message || err);
     console.log();
@@ -140,9 +140,9 @@ function createCompiler({
       .getCompilerHooks(compiler)
       .waiting.tap('awaitingTypeScriptCheck', () => {
         console.log(
-          chalk.yellow(
-            'Files successfully emitted, waiting for typecheck results...'
-          )
+          pico.yellow(
+            'Files successfully emitted, waiting for typecheck results...',
+          ),
         );
       });
   }
@@ -168,7 +168,7 @@ function createCompiler({
     const messages = formatWebpackMessages(statsData);
     const isSuccessful = !messages.errors.length && !messages.warnings.length;
     if (isSuccessful) {
-      console.log(chalk.green('Compiled successfully!'));
+      console.log(pico.green('Compiled successfully!'));
     }
     if (isSuccessful && (isInteractive || isFirstCompile)) {
       printInstructions(appName, urls, useYarn);
@@ -182,26 +182,26 @@ function createCompiler({
       if (messages.errors.length > 1) {
         messages.errors.length = 1;
       }
-      console.log(chalk.red('Failed to compile.\n'));
+      console.log(pico.red('Failed to compile.\n'));
       console.log(messages.errors.join('\n\n'));
       return;
     }
 
     // Show warnings if no errors were found.
     if (messages.warnings.length) {
-      console.log(chalk.yellow('Compiled with warnings.\n'));
+      console.log(pico.yellow('Compiled with warnings.\n'));
       console.log(messages.warnings.join('\n\n'));
 
       // Teach some ESLint tricks.
       console.log(
         '\nSearch for the ' +
-          chalk.underline(chalk.yellow('keywords')) +
-          ' to learn more about each warning.'
+          pico.underline(pico.yellow('keywords')) +
+          ' to learn more about each warning.',
       );
       console.log(
         'To ignore, add ' +
-          chalk.cyan('// eslint-disable-next-line') +
-          ' to the line before.\n'
+          pico.cyan('// eslint-disable-next-line') +
+          ' to the line before.\n',
       );
     }
   });
@@ -209,7 +209,7 @@ function createCompiler({
   // You can safely remove this after ejecting.
   // We only use this block for testing of Create React App itself:
   const isSmokeTest = process.argv.some(
-    arg => arg.indexOf('--smoke-test') > -1
+    arg => arg.indexOf('--smoke-test') > -1,
   );
   if (isSmokeTest) {
     compiler.hooks.failed.tap('smokeTest', async () => {
@@ -262,21 +262,21 @@ function resolveLoopback(proxy) {
 // It allows us to log custom error messages on the console.
 function onProxyError(proxy) {
   return (err, req, res) => {
-    const host = req.headers && req.headers.host;
+    const host = req.headers?.host;
     console.log(
-      chalk.red('Proxy error:') +
+      pico.red('Proxy error:') +
         ' Could not proxy request ' +
-        chalk.cyan(req.url) +
+        pico.cyan(req.url) +
         ' from ' +
-        chalk.cyan(host) +
+        pico.cyan(host) +
         ' to ' +
-        chalk.cyan(proxy) +
-        '.'
+        pico.cyan(proxy) +
+        '.',
     );
     console.log(
       'See https://nodejs.org/api/errors.html#errors_common_system_errors for more information (' +
-        chalk.cyan(err.code) +
-        ').'
+        pico.cyan(err.code) +
+        ').',
     );
     console.log();
 
@@ -294,7 +294,7 @@ function onProxyError(proxy) {
         proxy +
         ' (' +
         err.code +
-        ').'
+        ').',
     );
   };
 }
@@ -306,13 +306,13 @@ function prepareProxy(proxy, appPublicFolder, servedPathname) {
   }
   if (typeof proxy !== 'string') {
     console.log(
-      chalk.red('When specified, "proxy" in package.json must be a string.')
+      pico.red('When specified, "proxy" in package.json must be a string.'),
     );
     console.log(
-      chalk.red('Instead, the type of "proxy" was "' + typeof proxy + '".')
+      pico.red('Instead, the type of "proxy" was "' + typeof proxy + '".'),
     );
     console.log(
-      chalk.red('Either remove "proxy" from package.json, or make it a string.')
+      pico.red('Either remove "proxy" from package.json, or make it a string.'),
     );
     process.exit(1);
   }
@@ -325,7 +325,7 @@ function prepareProxy(proxy, appPublicFolder, servedPathname) {
   function mayProxy(pathname) {
     const maybePublicPath = path.resolve(
       appPublicFolder,
-      pathname.replace(new RegExp('^' + servedPathname), '')
+      pathname.replace(new RegExp('^' + servedPathname), ''),
     );
     const isPublicFileRequest = fs.existsSync(maybePublicPath);
     // used by webpackHotDevClient
@@ -336,9 +336,9 @@ function prepareProxy(proxy, appPublicFolder, servedPathname) {
 
   if (!/^http(s)?:\/\//.test(proxy)) {
     console.log(
-      chalk.red(
-        'When "proxy" is specified in package.json it must start with either http:// or https://'
-      )
+      pico.red(
+        'When "proxy" is specified in package.json it must start with either http:// or https://',
+      ),
     );
     process.exit(1);
   }
@@ -406,9 +406,9 @@ function choosePort(host, defaultPort) {
             type: 'confirm',
             name: 'shouldChangePort',
             message:
-              chalk.yellow(
+              pico.yellow(
                 message +
-                  `${existingProcess ? ` Probably:\n  ${existingProcess}` : ''}`
+                  `${existingProcess ? ` Probably:\n  ${existingProcess}` : ''}`,
               ) + '\n\nWould you like to run the app on another port instead?',
             initial: true,
           };
@@ -420,18 +420,18 @@ function choosePort(host, defaultPort) {
             }
           });
         } else {
-          console.log(chalk.red(message));
+          console.log(pico.red(message));
           resolve(null);
         }
       }),
     err => {
       throw new Error(
-        chalk.red(`Could not find an open port at ${chalk.bold(host)}.`) +
+        pico.red(`Could not find an open port at ${pico.bold(host)}.`) +
           '\n' +
           ('Network error message: ' + err.message || err) +
-          '\n'
+          '\n',
       );
-    }
+    },
   );
 }
 

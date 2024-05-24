@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const child_process = require('child_process');
 const os = require('os');
-const chalk = require('chalk');
+const pico = require('picocolors');
 const shellQuote = require('shell-quote');
 
 function isTerminalEditor(editor) {
@@ -127,7 +127,7 @@ function getArgumentsForLineNumber(
   fileName,
   lineNumber,
   colNumber,
-  workspace
+  workspace,
 ) {
   const editorBasename = path.basename(editor).replace(/\.(exe|cmd|bat)$/i, '');
   switch (editorBasename) {
@@ -163,7 +163,7 @@ function getArgumentsForLineNumber(
     case 'VSCodium':
       return addWorkspaceToArgumentsIfExists(
         ['-g', fileName + ':' + lineNumber + ':' + colNumber],
-        workspace
+        workspace,
       );
     case 'appcode':
     case 'clion':
@@ -184,7 +184,7 @@ function getArgumentsForLineNumber(
     case 'rider64':
       return addWorkspaceToArgumentsIfExists(
         ['--line', lineNumber, fileName],
-        workspace
+        workspace,
       );
   }
 
@@ -218,7 +218,7 @@ function guessEditor() {
       // Just filter them out upfront. This also saves 10-20ms on the command.
       const output = child_process
         .execSync(
-          'wmic process where "executablepath is not null" get executablepath'
+          'wmic process where "executablepath is not null" get executablepath',
         )
         .toString();
       const runningProcesses = output.split('\r\n');
@@ -261,25 +261,25 @@ function guessEditor() {
 function printInstructions(fileName, errorMessage) {
   console.log();
   console.log(
-    chalk.red('Could not open ' + path.basename(fileName) + ' in the editor.')
+    pico.red('Could not open ' + path.basename(fileName) + ' in the editor.'),
   );
   if (errorMessage) {
     if (errorMessage[errorMessage.length - 1] !== '.') {
       errorMessage += '.';
     }
     console.log(
-      chalk.red('The editor process exited with an error: ' + errorMessage)
+      pico.red('The editor process exited with an error: ' + errorMessage),
     );
   }
   console.log();
   console.log(
     'To set up the editor integration, add something like ' +
-      chalk.cyan('REACT_EDITOR=atom') +
+      pico.cyan('REACT_EDITOR=atom') +
       ' to the ' +
-      chalk.green('.env.local') +
+      pico.green('.env.local') +
       ' file in your project folder ' +
       'and restart the development server. Learn more: ' +
-      chalk.green('https://goo.gl/MMTaZt')
+      pico.green('https://goo.gl/MMTaZt'),
   );
   console.log();
 }
@@ -338,14 +338,14 @@ function launchEditor(fileName, lineNumber, colNumber) {
   ) {
     console.log();
     console.log(
-      chalk.red('Could not open ' + path.basename(fileName) + ' in the editor.')
+      pico.red('Could not open ' + path.basename(fileName) + ' in the editor.'),
     );
     console.log();
     console.log(
       'When running on Windows, file names are checked against a whitelist ' +
         'to protect against remote code execution attacks. File names may ' +
         'consist only of alphanumeric characters (all languages), periods, ' +
-        'dashes, slashes, and underscores.'
+        'dashes, slashes, and underscores.',
     );
     console.log();
     return;
@@ -359,8 +359,8 @@ function launchEditor(fileName, lineNumber, colNumber) {
         fileName,
         lineNumber,
         colNumber,
-        workspace
-      )
+        workspace,
+      ),
     );
   } else {
     args.push(fileName);
@@ -379,7 +379,7 @@ function launchEditor(fileName, lineNumber, colNumber) {
     _childProcess = child_process.spawn(
       'cmd.exe',
       ['/C', editor].concat(args),
-      { stdio: 'inherit' }
+      { stdio: 'inherit' },
     );
   } else {
     _childProcess = child_process.spawn(editor, args, { stdio: 'inherit' });

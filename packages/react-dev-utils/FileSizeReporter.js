@@ -7,13 +7,13 @@
 
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var chalk = require('chalk');
-var filesize = require('filesize');
-var recursive = require('recursive-readdir');
-var stripAnsi = require('strip-ansi');
-var gzipSize = require('gzip-size').sync;
+const fs = require('fs');
+const path = require('path');
+const pico = require('picocolors');
+const filesize = require('filesize');
+const recursive = require('recursive-readdir');
+const stripAnsi = require('strip-ansi');
+const gzipSize = require('gzip-size').sync;
 
 function canReadAsset(asset) {
   return (
@@ -29,7 +29,7 @@ function printFileSizesAfterBuild(
   previousSizeMap,
   buildFolder,
   maxBundleGzipSize,
-  maxChunkGzipSize
+  maxChunkGzipSize,
 ) {
   var root = previousSizeMap.root;
   var sizes = previousSizeMap.sizes;
@@ -46,20 +46,21 @@ function printFileSizesAfterBuild(
           return {
             folder: path.join(
               path.basename(buildFolder),
-              path.dirname(asset.name)
+              path.dirname(asset.name),
             ),
             name: path.basename(asset.name),
             size: size,
             sizeLabel:
-              filesize(size) + (difference ? ' (' + difference + ')' : ''),
+              filesize.filesize(size) +
+              (difference ? ' (' + difference + ')' : ''),
           };
-        })
+        }),
     )
     .reduce((single, all) => all.concat(single), []);
   assets.sort((a, b) => b.size - a.size);
   var longestSizeLabelLength = Math.max.apply(
     null,
-    assets.map(a => stripAnsi(a.sizeLabel).length)
+    assets.map(a => stripAnsi(a.sizeLabel).length),
   );
   var suggestBundleSplitting = false;
   assets.forEach(asset => {
@@ -79,26 +80,26 @@ function printFileSizesAfterBuild(
     }
     console.log(
       '  ' +
-        (isLarge ? chalk.yellow(sizeLabel) : sizeLabel) +
+        (isLarge ? pico.yellow(sizeLabel) : sizeLabel) +
         '  ' +
-        chalk.dim(asset.folder + path.sep) +
-        chalk.cyan(asset.name)
+        pico.dim(asset.folder + path.sep) +
+        pico.cyan(asset.name),
     );
   });
   if (suggestBundleSplitting) {
     console.log();
     console.log(
-      chalk.yellow('The bundle size is significantly larger than recommended.')
+      pico.yellow('The bundle size is significantly larger than recommended.'),
     );
     console.log(
-      chalk.yellow(
-        'Consider reducing it with code splitting: https://create-react-app.dev/docs/code-splitting/'
-      )
+      pico.yellow(
+        'Consider reducing it with code splitting: https://create-react-app.dev/docs/code-splitting/',
+      ),
     );
     console.log(
-      chalk.yellow(
-        'You can also analyze the project dependencies: https://goo.gl/LeUzfb'
-      )
+      pico.yellow(
+        'You can also analyze the project dependencies: https://goo.gl/LeUzfb',
+      ),
     );
   }
 }
@@ -109,7 +110,7 @@ function removeFileNameHash(buildFolder, fileName) {
     .replace(/\\/g, '/')
     .replace(
       /\/?(.*)(\.[0-9a-f]+)(\.chunk)?(\.js|\.css)/,
-      (match, p1, p2, p3, p4) => p1 + p4
+      (match, p1, p2, p3, p4) => p1 + p4,
     );
 }
 
@@ -118,13 +119,13 @@ function removeFileNameHash(buildFolder, fileName) {
 function getDifferenceLabel(currentSize, previousSize) {
   var FIFTY_KILOBYTES = 1024 * 50;
   var difference = currentSize - previousSize;
-  var fileSize = !Number.isNaN(difference) ? filesize(difference) : 0;
+  var fileSize = !Number.isNaN(difference) ? filesize.filesize(difference) : 0;
   if (difference >= FIFTY_KILOBYTES) {
-    return chalk.red('+' + fileSize);
+    return pico.red('+' + fileSize);
   } else if (difference < FIFTY_KILOBYTES && difference > 0) {
-    return chalk.yellow('+' + fileSize);
+    return pico.yellow('+' + fileSize);
   } else if (difference < 0) {
-    return chalk.green(fileSize);
+    return pico.green(fileSize);
   } else {
     return '';
   }

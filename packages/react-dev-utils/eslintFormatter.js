@@ -8,7 +8,7 @@
 'use strict';
 
 const path = require('path');
-const chalk = require('chalk');
+const pico = require('picocolors');
 const stripAnsi = require('strip-ansi');
 const table = require('text-table');
 
@@ -56,13 +56,13 @@ function formatter(results) {
       if (message.column) {
         line += ':' + message.column;
       }
-      let position = chalk.bold('Line ' + line + ':');
+      let position = pico.bold('Line ' + line + ':');
       return [
         '',
         position,
         messageType,
         message.message.replace(/\.$/, ''),
-        chalk.underline(message.ruleId || ''),
+        pico.underline(message.ruleId || ''),
       ];
     });
 
@@ -73,7 +73,7 @@ function formatter(results) {
 
     // add color to rule keywords
     messages.forEach(m => {
-      m[4] = m[2] === 'error' ? chalk.red(m[4]) : chalk.yellow(m[4]);
+      m[4] = m[2] === 'error' ? pico.red(m[4]) : pico.yellow(m[4]);
       m.splice(2, 1);
     });
 
@@ -101,7 +101,7 @@ function formatter(results) {
     // this function.
     output +=
       'Search for the ' +
-      chalk.underline(chalk.red('keywords')) +
+      pico.underline(pico.red('keywords')) +
       ' to learn more about each error.';
   }
 

@@ -39,13 +39,15 @@ const dotenvFiles = [
 // https://github.com/motdotla/dotenv
 // https://github.com/motdotla/dotenv-expand
 dotenvFiles.forEach(dotenvFile => {
-  if (fs.existsSync(dotenvFile)) {
-    require('dotenv-expand')(
-      require('dotenv').config({
-        path: dotenvFile,
-      })
-    );
-  }
+  Bun.file(dotenvFile).exists().then(exists => {
+    if (exists) {
+      require('dotenv-expand')(
+        require('dotenv').config({
+          path: dotenvFile,
+        })
+      );
+    }
+  });
 });
 
 // We support resolving modules according to `NODE_PATH`.

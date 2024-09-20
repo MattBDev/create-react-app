@@ -43,6 +43,12 @@ function getBrowserEnv() {
   return { action, value, args };
 }
 
+/**
+ *
+ * @param {string} scriptPath
+ * @param {string} url
+ * @returns
+ */
 function executeNodeScript(scriptPath, url) {
   const extraArgs = process.argv.slice(2);
   const child = spawn(process.execPath, [scriptPath, ...extraArgs, url], {
@@ -64,6 +70,13 @@ function executeNodeScript(scriptPath, url) {
   return true;
 }
 
+/**
+ *
+ * @param {string | undefined} browser
+ * @param {string} url
+ * @param {string[]} args
+ * @returns
+ */
 function startBrowserProcess(browser, url, args) {
   // If we're on OS X, the user hasn't specifically
   // requested a different browser, we can try opening

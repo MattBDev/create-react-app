@@ -1,9 +1,10 @@
 'use strict';
-
-const pluginTester = require('babel-plugin-tester/pure');
-const namedAssetImport = require('./index');
-
-pluginTester.default({
+import { describe, it } from "bun:test";
+import pluginTester from 'babel-plugin-tester/pure';
+import namedAssetImport from './index';
+globalThis.describe = describe;
+globalThis.it = it;
+pluginTester({
   plugin: namedAssetImport,
   pluginOptions: {
     loaderMap: {

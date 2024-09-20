@@ -7,6 +7,8 @@
 
 'use strict';
 
+import { expect, describe, it } from "bun:test";
+
 const getCSSModuleLocalIdent = require('../getCSSModuleLocalIdent');
 
 const rootContext = '/path';

@@ -16,7 +16,7 @@ process.on('unhandledRejection', err => {
 
 const fs = require('fs-extra');
 const path = require('path');
-const chalk = require('react-dev-utils/chalk');
+const picocolors = require('react-dev-utils/chalk');
 const execSync = require('child_process').execSync;
 const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
@@ -94,21 +94,21 @@ module.exports = function (
   if (!templateName) {
     console.log('');
     console.error(
-      `A template was not provided. This is likely because you're using an outdated version of ${chalk.cyan(
+      `A template was not provided. This is likely because you're using an outdated version of ${picocolors.cyan(
         'create-react-app'
       )}.`
     );
     console.error(
-      `Please note that global installs of ${chalk.cyan(
+      `Please note that global installs of ${picocolors.cyan(
         'create-react-app'
       )} are no longer supported.`
     );
     console.error(
-      `You can fix this by running ${chalk.cyan(
+      `You can fix this by running ${picocolors.cyan(
         'npm uninstall -g create-react-app'
-      )} or ${chalk.cyan(
+      )} or ${picocolors.cyan(
         'yarn global remove create-react-app'
-      )} before using ${chalk.cyan('create-react-app')} again.`
+      )} before using ${picocolors.cyan('create-react-app')} again.`
     );
     return;
   }
@@ -130,7 +130,7 @@ module.exports = function (
   if (templateJson.dependencies || templateJson.scripts) {
     console.log();
     console.log(
-      chalk.red(
+      picocolors.red(
         'Root-level `dependencies` and `scripts` keys in `template.json` were deprecated for Create React App 5.\n' +
           'This template needs to be updated to use the new `package` key.'
       )
@@ -235,7 +235,7 @@ module.exports = function (
     fs.copySync(templateDir, appPath);
   } else {
     console.error(
-      `Could not locate supplied template: ${chalk.green(templateDir)}`
+      `Could not locate supplied template: ${picocolors.green(templateDir)}`
     );
     return;
   }
@@ -369,19 +369,19 @@ module.exports = function (
   console.log(`Success! Created ${appName} at ${appPath}`);
   console.log('Inside that directory, you can run several commands:');
   console.log();
-  console.log(chalk.cyan(`  ${displayedCommand} start`));
+  console.log(picocolors.cyan(`  ${displayedCommand} start`));
   console.log('    Starts the development server.');
   console.log();
   console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}build`)
+    picocolors.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}build`)
   );
   console.log('    Bundles the app into static files for production.');
   console.log();
-  console.log(chalk.cyan(`  ${displayedCommand} test`));
+  console.log(picocolors.cyan(`  ${displayedCommand} test`));
   console.log('    Starts the test runner.');
   console.log();
   console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`)
+    picocolors.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`)
   );
   console.log(
     '    Removes this tool and copies build dependencies, configuration files'
@@ -392,12 +392,12 @@ module.exports = function (
   console.log();
   console.log('We suggest that you begin by typing:');
   console.log();
-  console.log(chalk.cyan('  cd'), cdpath);
-  console.log(`  ${chalk.cyan(`${displayedCommand} start`)}`);
+  console.log(picocolors.cyan('  cd'), cdpath);
+  console.log(`  ${picocolors.cyan(`${displayedCommand} start`)}`);
   if (readmeExists) {
     console.log();
     console.log(
-      chalk.yellow(
+      picocolors.yellow(
         'You had a `README.md` file, we renamed it to `README.old.md`'
       )
     );

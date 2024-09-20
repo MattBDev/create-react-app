@@ -23,7 +23,7 @@ process.on('unhandledRejection', err => {
 require('../config/env');
 
 const path = require('path');
-const chalk = require('react-dev-utils/chalk');
+const picocolors = require('react-dev-utils/chalk');
 const fs = require('fs-extra');
 const bfj = require('bfj');
 const webpack = require('webpack');
@@ -78,20 +78,22 @@ checkBrowsers(paths.appPath, isInteractive)
   .then(
     ({ stats, previousFileSizes, warnings }) => {
       if (warnings.length) {
-        console.log(chalk.yellow('Compiled with warnings.\n'));
+        console.log(picocolors.yellow('Compiled with warnings.\n'));
         console.log(warnings.join('\n\n'));
         console.log(
           '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
+            picocolors.underline(picocolors.yellow('keywords')) +
             ' to learn more about each warning.'
         );
         console.log(
           'To ignore, add ' +
-            chalk.cyan('// eslint-disable-next-line') +
+            picocolors.cyan('// eslint-disable-next-line') +
             ' to the line before.\n'
         );
       } else {
-        console.log(chalk.green('Compiled successfully.\n'));
+        const packageName = require(paths.appPackageJson).name;
+        console.log("Package Name: ", packageName);
+        console.log(picocolors.green('Compiled successfully.\n'));
       }
 
       console.log('File sizes after gzip:\n');
@@ -120,13 +122,13 @@ checkBrowsers(paths.appPath, isInteractive)
       const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
       if (tscCompileOnError) {
         console.log(
-          chalk.yellow(
+          picocolors.yellow(
             'Compiled with the following type errors (you may want to check these before deploying your app):\n'
           )
         );
         printBuildError(err);
       } else {
-        console.log(chalk.red('Failed to compile.\n'));
+        console.log(picocolors.red('Failed to compile.\n'));
         printBuildError(err);
         process.exit(1);
       }
@@ -140,9 +142,16 @@ checkBrowsers(paths.appPath, isInteractive)
   });
 
 // Create the production build and print the deployment instructions.
-function build(previousFileSizes) {
+async function build(previousFileSizes) {
   console.log('Creating an optimized production build...');
-
+  //Bun Bundler for production
+  const output = await Bun.build({
+    target: 'browser',
+    entrypoints: [paths.appIndexJs],
+    outdir: paths.appBuild+ '-BUN',
+    naming: 'satitc/js/[name]-BUN-[hash].[ext]',
+    publicPath: paths.publicUrlOrPath,
+  });
   const compiler = webpack(config);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
@@ -190,7 +199,7 @@ function build(previousFileSizes) {
         );
         if (filteredWarnings.length) {
           console.log(
-            chalk.yellow(
+            picocolors.yellow(
               '\nTreating warnings as errors because process.env.CI = true.\n' +
                 'Most CI servers set it automatically.\n'
             )

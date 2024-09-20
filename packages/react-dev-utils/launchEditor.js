@@ -207,8 +207,8 @@ function guessEditor() {
     if (process.platform === 'darwin') {
       const output = child_process.execSync('ps x').toString();
       const processNames = Object.keys(COMMON_EDITORS_OSX);
-      for (let i = 0; i < processNames.length; i++) {
-        const processName = processNames[i];
+      for (const element of processNames) {
+        const processName = element;
         if (output.indexOf(processName) !== -1) {
           return [COMMON_EDITORS_OSX[processName]];
         }
@@ -222,8 +222,8 @@ function guessEditor() {
         )
         .toString();
       const runningProcesses = output.split('\r\n');
-      for (let i = 0; i < runningProcesses.length; i++) {
-        const processPath = runningProcesses[i].trim();
+      for (const element of runningProcesses) {
+        const processPath = element.trim();
         const processName = path.basename(processPath);
         if (COMMON_EDITORS_WIN.indexOf(processName) !== -1) {
           return [processPath];
@@ -237,8 +237,8 @@ function guessEditor() {
         .execSync('ps x --no-heading -o comm --sort=comm')
         .toString();
       const processNames = Object.keys(COMMON_EDITORS_LINUX);
-      for (let i = 0; i < processNames.length; i++) {
-        const processName = processNames[i];
+      for (const element of processNames) {
+        const processName = element;
         if (output.indexOf(processName) !== -1) {
           return [COMMON_EDITORS_LINUX[processName]];
         }

@@ -11,7 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const paths = require('./paths');
-const chalk = require('react-dev-utils/chalk');
+const pico = require('react-dev-utils/chalk');
 const resolve = require('resolve');
 
 /**
@@ -50,10 +50,10 @@ function getAdditionalModulePaths(options = {}) {
 
   // Otherwise, throw an error.
   throw new Error(
-    chalk.red.bold(
+    pico.red(pico.bold(
       "Your project's `baseUrl` can only be set to `src` or `node_modules`." +
         ' Create React App does not support other values at this time.'
-    )
+    ))
   );
 }
 

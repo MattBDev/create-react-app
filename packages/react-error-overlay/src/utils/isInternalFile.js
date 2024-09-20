@@ -5,8 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/* @flow */
-function isInternalFile(sourceFileName: ?string, fileName: ?string) {
+/**
+ * @param {?string} sourceFileName
+ * @param {?string} fileName
+ *
+ */
+function isInternalFile(sourceFileName, fileName) {
   return (
     sourceFileName == null ||
     sourceFileName === '' ||

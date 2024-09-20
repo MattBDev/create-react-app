@@ -22,7 +22,11 @@ const defaultBrowsers = {
   ],
 };
 
-function shouldSetBrowsers(isInteractive) {
+/**
+ * @param {boolean} isInteractive
+ * @returns {Promise<boolean>}
+ */
+async function shouldSetBrowsers(isInteractive) {
   if (!isInteractive) {
     return Promise.resolve(true);
   }
@@ -68,11 +72,11 @@ function checkBrowsers(dir, isInteractive, retry = true) {
 
     return (
       pkgUp({ cwd: dir })
-        .then(filePath => {
+        .then(async filePath => {
           if (filePath == null) {
             return Promise.reject();
           }
-          const pkg = JSON.parse(fs.readFileSync(filePath));
+          const pkg = await Bun.file(filePath).json();
           pkg['browserslist'] = defaultBrowsers;
           fs.writeFileSync(filePath, JSON.stringify(pkg, null, 2) + os.EOL);
 

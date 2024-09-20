@@ -8,13 +8,12 @@
 
 'use strict';
 
-const chalk = require('react-dev-utils/chalk');
+const picocolors = require('react-dev-utils/chalk');
 const fs = require('fs');
 const resolve = require('resolve');
 const path = require('path');
 const paths = require('../../config/paths');
 const os = require('os');
-const semver = require('semver');
 const immer = require('react-dev-utils/immer').produce;
 const globby = require('react-dev-utils/globby').sync;
 
@@ -45,10 +44,10 @@ function verifyNoTypeScript() {
   );
   if (typescriptFiles.length > 0) {
     console.warn(
-      chalk.yellow(
-        `We detected TypeScript in your project (${chalk.bold(
+      picocolors.yellow(
+        `We detected TypeScript in your project (${picocolors.bold(
           `src${path.sep}${typescriptFiles[0]}`
-        )}) and created a ${chalk.bold('tsconfig.json')} file for you.`
+        )}) and created a ${picocolors.bold('tsconfig.json')} file for you.`
       )
     );
     console.warn();
@@ -86,27 +85,22 @@ function verifyTypeScriptSetup() {
     }
   } catch (_) {
     console.error(
-      chalk.bold.red(
-        `It looks like you're trying to use TypeScript but do not have ${chalk.bold(
+      picocolors.bold(picocolors.red(
+        `It looks like you're trying to use TypeScript but do not have ${picocolors.bold(
           'typescript'
         )} installed.`
+      ))
+    );
+    console.error(
+      picocolors.bold(
+        'Please install ' + picocolors.cyan(picocolors.bold('typescript')) + ' by running ' + picocolors.cyan(picocolors.bold(isYarn ? 'yarn add typescript' : 'npm install typescript')) + '.'
       )
     );
     console.error(
-      chalk.bold(
-        'Please install',
-        chalk.cyan.bold('typescript'),
-        'by running',
-        chalk.cyan.bold(
-          isYarn ? 'yarn add typescript' : 'npm install typescript'
-        ) + '.'
-      )
-    );
-    console.error(
-      chalk.bold(
+      picocolors.bold(
         'If you are not trying to use TypeScript, please remove the ' +
-          chalk.cyan('tsconfig.json') +
-          ' file from your package root (and any TypeScript files).'
+        picocolors.cyan('tsconfig.json') +
+        ' file from your package root (and any TypeScript files).'
       )
     );
     console.error();
@@ -147,11 +141,11 @@ function verifyTypeScriptSetup() {
     noEmit: { value: true },
     jsx: {
       parsedValue:
-        hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
+        hasJsxRuntime && Bun.semver.satisfies(ts.version, '>=4.1.0-beta')
           ? ts.JsxEmit.ReactJSX
           : ts.JsxEmit.React,
       value:
-        hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
+        hasJsxRuntime && Bun.semver.satisfies(ts.version, '>=4.1.0-beta')
           ? 'react-jsx'
           : 'react',
       reason: 'to support the new JSX transform in React 17',
@@ -203,11 +197,11 @@ function verifyTypeScriptSetup() {
   } catch (e) {
     if (e && e.name === 'SyntaxError') {
       console.error(
-        chalk.red.bold(
-          'Could not parse',
-          chalk.cyan('tsconfig.json') + '.',
+        picocolors.red(picocolors.bold(
+          'Could not parse ' +
+          picocolors.cyan('tsconfig.json') + '.' + os.EOL +
           'Please make sure it contains syntactically correct JSON.'
-        )
+        ))
       );
     }
 
@@ -224,7 +218,7 @@ function verifyTypeScriptSetup() {
     const { parsedValue, value, suggested, reason } = compilerOptions[option];
 
     const valueToCheck = parsedValue === undefined ? value : parsedValue;
-    const coloredOption = chalk.cyan('compilerOptions.' + option);
+    const coloredOption = picocolors.cyan('compilerOptions.' + option);
 
     if (suggested != null) {
       if (parsedCompilerOptions[option] === undefined) {
@@ -232,9 +226,9 @@ function verifyTypeScriptSetup() {
           config.compilerOptions[option] = suggested;
         });
         messages.push(
-          `${coloredOption} to be ${chalk.bold(
+          `${coloredOption} to be ${picocolors.bold(
             'suggested'
-          )} value: ${chalk.cyan.bold(suggested)} (this can be changed)`
+          )} value: ${picocolors.cyan(picocolors.bold(suggested))} (this can be changed)`
         );
       }
     } else if (parsedCompilerOptions[option] !== valueToCheck) {
@@ -242,10 +236,10 @@ function verifyTypeScriptSetup() {
         config.compilerOptions[option] = value;
       });
       messages.push(
-        `${coloredOption} ${chalk.bold(
+        `${coloredOption} ${picocolors.bold(
           valueToCheck == null ? 'must not' : 'must'
-        )} be ${valueToCheck == null ? 'set' : chalk.cyan.bold(value)}` +
-          (reason != null ? ` (${reason})` : '')
+        )} be ${valueToCheck == null ? 'set' : picocolors.cyan(picocolors.bold(value))}` +
+        (reason != null ? ` (${reason})` : '')
       );
     }
   }
@@ -256,26 +250,26 @@ function verifyTypeScriptSetup() {
       config.include = ['src'];
     });
     messages.push(
-      `${chalk.cyan('include')} should be ${chalk.cyan.bold('src')}`
+      `${picocolors.cyan('include')} should be ${picocolors.cyan(picocolors.bold('src'))}`
     );
   }
 
   if (messages.length > 0) {
     if (firstTimeSetup) {
       console.log(
-        chalk.bold(
-          'Your',
-          chalk.cyan('tsconfig.json'),
-          'has been populated with default values.'
+        picocolors.bold(
+          'Your ' +
+          picocolors.cyan('tsconfig.json') +
+          ' has been populated with default values.'
         )
       );
       console.log();
     } else {
       console.warn(
-        chalk.bold(
-          'The following changes are being made to your',
-          chalk.cyan('tsconfig.json'),
-          'file:'
+        picocolors.bold(
+          'The following changes are being made to your ' +
+          picocolors.cyan('tsconfig.json') +
+          ' file:'
         )
       );
       messages.forEach(message => {

@@ -190,7 +190,7 @@ module.exports = function (webpackEnv) {
           options: {
             sourceMap: true,
           },
-        }
+        },
       );
     }
     return loaders;
@@ -248,7 +248,7 @@ module.exports = function (webpackEnv) {
         defaultWebpack: ['webpack/lib/'],
         config: [__filename],
         tsconfig: [paths.appTsConfig, paths.appJsConfig].filter(f =>
-          fs.existsSync(f)
+          fs.existsSync(f),
         ),
       },
     },
@@ -267,10 +267,10 @@ module.exports = function (webpackEnv) {
               // into invalid ecma 5 code. This is why the 'compress' and 'output'
               // sections only apply transformations that are ecma 5 safe
               // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
+              ecma: 2020,
             },
             compress: {
-              ecma: 5,
+              ecma: 2020,
               warnings: false,
               // Disabled because of an issue with Uglify breaking seemingly valid code:
               // https://github.com/facebook/create-react-app/issues/2376
@@ -283,14 +283,11 @@ module.exports = function (webpackEnv) {
               // https://github.com/terser-js/terser/issues/120
               inline: 2,
             },
-            mangle: {
-              safari10: true,
-            },
             // Added for profiling in devtools
             keep_classnames: isEnvProductionProfile,
             keep_fnames: isEnvProductionProfile,
             output: {
-              ecma: 5,
+              ecma: 2020,
               comments: false,
               // Turned on because emoji and regex is not minified properly using default
               // https://github.com/facebook/create-react-app/issues/2488
@@ -308,7 +305,7 @@ module.exports = function (webpackEnv) {
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
       modules: ['node_modules', paths.appNodeModules].concat(
-        modules.additionalModulePaths || []
+        modules.additionalModulePaths || [],
       ),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
@@ -361,23 +358,11 @@ module.exports = function (webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
-            // TODO: Merge this config once `image/avif` is in the mime-db
-            // https://github.com/jshttp/mime-db
-            {
-              test: [/\.avif$/],
-              type: 'asset',
-              mimetype: 'image/avif',
-              parser: {
-                dataUrlCondition: {
-                  maxSize: imageInlineSizeLimit,
-                },
-              },
-            },
             // "url" loader works like "file" loader except that it embeds assets
             // smaller than specified limit in bytes as data URLs to avoid requests.
             // A missing `test` is equivalent to a match.
             {
-              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.avif$/],
               type: 'asset',
               parser: {
                 dataUrlCondition: {
@@ -419,7 +404,7 @@ module.exports = function (webpackEnv) {
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
-                  'babel-preset-react-app/webpack-overrides'
+                  'babel-preset-react-app/webpack-overrides',
                 ),
                 presets: [
                   [
@@ -446,7 +431,7 @@ module.exports = function (webpackEnv) {
                     'babel-preset-react-app',
                     'react-dev-utils',
                     'react-scripts',
-                  ]
+                  ],
                 ),
                 // @remove-on-eject-end
                 plugins: [
@@ -492,7 +477,7 @@ module.exports = function (webpackEnv) {
                     'babel-preset-react-app',
                     'react-dev-utils',
                     'react-scripts',
-                  ]
+                  ],
                 ),
                 // @remove-on-eject-end
                 // Babel sourcemaps are needed for debugging into node_modules
@@ -558,7 +543,7 @@ module.exports = function (webpackEnv) {
                     mode: 'icss',
                   },
                 },
-                'sass-loader'
+                'sass-loader',
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -581,7 +566,7 @@ module.exports = function (webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                'sass-loader'
+                'sass-loader',
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
@@ -627,8 +612,8 @@ module.exports = function (webpackEnv) {
                   minifyURLs: true,
                 },
               }
-            : undefined
-        )
+            : undefined,
+        ),
       ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
@@ -675,24 +660,25 @@ module.exports = function (webpackEnv) {
       //   `index.html`
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
-      new WebpackManifestPlugin({
-        fileName: 'asset-manifest.json',
-        publicPath: paths.publicUrlOrPath,
-        generate: (seed, files, entrypoints) => {
-          const manifestFiles = files.reduce((manifest, file) => {
-            manifest[file.name] = file.path;
-            return manifest;
-          }, seed);
-          const entrypointFiles = entrypoints.main.filter(
-            fileName => !fileName.endsWith('.map')
-          );
+      // BUN MATTB START
+      // new WebpackManifestPlugin({
+      //   fileName: 'asset-manifest.json',
+      //   publicPath: paths.publicUrlOrPath,
+      //   generate: (seed, files, entrypoints) => {
+      //     const manifestFiles = files.reduce((manifest, file) => {
+      //       manifest[file.name] = file.path;
+      //       return manifest;
+      //     }, seed);
+      //     const entrypointFiles = entrypoints.main.filter(
+      //       fileName => !fileName.endsWith('.map'),
+      //     );
 
-          return {
-            files: manifestFiles,
-            entrypoints: entrypointFiles,
-          };
-        },
-      }),
+      //     return {
+      //       files: manifestFiles,
+      //       entrypoints: entrypointFiles,
+      //     };
+      //   },
+      // }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
@@ -759,9 +745,6 @@ module.exports = function (webpackEnv) {
               { file: '**/src/setupTests.*' },
             ],
           },
-          logger: {
-            infrastructure: 'silent',
-          },
         }),
       !disableESLintPlugin &&
         new ESLintPlugin({
@@ -774,7 +757,7 @@ module.exports = function (webpackEnv) {
           cache: true,
           cacheLocation: path.resolve(
             paths.appNodeModules,
-            '.cache/.eslintcache'
+            '.cache/.eslintcache',
           ),
           // ESLint class options
           cwd: paths.appPath,

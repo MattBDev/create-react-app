@@ -18,14 +18,14 @@ const fs = require('fs-extra');
 const path = require('path');
 const prompts = require('prompts');
 const execSync = require('child_process').execSync;
-const chalk = require('react-dev-utils/chalk');
+const picocolors = require('react-dev-utils/chalk');
 const paths = require('../config/paths');
 const createJestConfig = require('./utils/createJestConfig');
 const spawnSync = require('react-dev-utils/crossSpawn').sync;
 const os = require('os');
 
-const green = chalk.green;
-const cyan = chalk.cyan;
+const green = picocolors.green;
+const cyan = picocolors.cyan;
 
 function getGitStatus() {
   try {
@@ -55,10 +55,10 @@ function tryGitAdd(appPath) {
 }
 
 console.log(
-  chalk.cyan.bold(
+  picocolors.cyan(picocolors.bold(
     'NOTE: Create React App 2+ supports TypeScript, Sass, CSS Modules and more without ejecting: ' +
       'https://reactjs.org/blog/2018/10/01/create-react-app-v2.html'
-  )
+  ))
 );
 console.log();
 
@@ -76,7 +76,7 @@ prompts({
   const gitStatus = getGitStatus();
   if (gitStatus) {
     console.error(
-      chalk.red(
+      picocolors.red(
         'This git repository has untracked files or uncommitted changes:'
       ) +
         '\n\n' +
@@ -85,7 +85,7 @@ prompts({
           .map(line => line.match(/ .*/g)[0].trim())
           .join('\n') +
         '\n\n' +
-        chalk.red(
+        picocolors.red(
           'Remove untracked files, stash or commit any changes, and try again.'
         )
     );
@@ -316,6 +316,7 @@ prompts({
     }
 
     console.log(cyan('Running yarn...'));
+    // Bun.spawnSync(['yarnpkg', '--cwd', process.cwd()], { stdio: ['inherit', 'inherit', 'inherit'] });
     spawnSync('yarnpkg', ['--cwd', process.cwd()], { stdio: 'inherit' });
 
     if (windowsCmdFileContent && !fs.existsSync(windowsCmdFilePath)) {

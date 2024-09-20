@@ -1,0 +1,13 @@
+diff --git a/build/WorkerPool.js b/build/WorkerPool.js
+index b1e439d2c53e7a33a6431a9b066d91816252d30e..72db0ed9844f3a2a32a8ae10970cd67a1ceb2af6 100644
+--- a/build/WorkerPool.js
++++ b/build/WorkerPool.js
+@@ -22,7 +22,7 @@ class WorkerPool extends _BaseWorkerPool.default {
+   }
+   createWorker(workerOptions) {
+     let Worker;
+-    if (this._options.enableWorkerThreads) {
++    if (false) {
+       Worker = require('./workers/NodeThreadsWorker').default;
+     } else {
+       Worker = require('./workers/ChildProcessWorker').default;

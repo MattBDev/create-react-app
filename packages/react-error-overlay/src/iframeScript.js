@@ -5,13 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'react-app-polyfill/ie9';
 import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
-import CompileErrorContainer from './containers/CompileErrorContainer';
-import RuntimeErrorContainer from './containers/RuntimeErrorContainer';
+import CompileErrorContainer from './containers/CompileErrorContainer.tsx';
+import RuntimeErrorContainer from './containers/RuntimeErrorContainer.tsx';
 import { overlayStyle } from './styles.ts';
-import { applyStyles, getTheme } from './utils/dom/css';
+import { applyStyles, getTheme } from './utils/dom/css.ts';
 
 let iframeRoot = null;
 const theme = getTheme();

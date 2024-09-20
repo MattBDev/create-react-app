@@ -1,5 +1,5 @@
 'use strict';
-
+const bunTest = require("bun:test");
 const path = require('path');
 const fs = require('fs-extra');
 const TestSetup = require('./util/setup');
@@ -11,13 +11,13 @@ const testSetup = new TestSetup(fixtureName, fixturePath, {
   pnp: !disablePnp,
 });
 
-beforeAll(async () => {
+bunTest.beforeAll(async () => {
   await testSetup.setup();
 }, 1000 * 60 * 5);
-afterAll(async () => {
+bunTest.afterAll(async () => {
   await testSetup.teardown();
 });
 
-beforeEach(() => jest.setTimeout(1000 * 60 * 5));
+bunTest.beforeEach(() => jest.setTimeout(1000 * 60 * 5));
 
 module.exports = testSetup;

@@ -17,6 +17,12 @@ function checkRequiredFiles(files) {
     files.forEach(filePath => {
       currentFilePath = filePath;
       fs.accessSync(filePath, fs.constants.F_OK);
+      var dirName = path.dirname(currentFilePath);
+      var fileName = path.basename(currentFilePath);
+      console.log(pico.red('Found a required file.'));
+      console.log(pico.red('  Name: ') + pico.cyan(fileName));
+      console.log(pico.red('  Searched in: ') + pico.cyan(dirName));
+
     });
     return true;
   } catch (err) {

@@ -8,17 +8,17 @@
 import {
   listenToRuntimeErrors,
   crashWithFrames,
-} from './listenToRuntimeErrors';
-import { iframeStyle } from './styles';
-import { applyStyles } from './utils/dom/css';
+} from './listenToRuntimeErrors.ts';
+import { iframeStyle } from './styles.ts';
+import { applyStyles } from './utils/dom/css.ts';
 
 // Importing iframe-bundle generated in the pre build step as
 // a text using webpack raw-loader. See webpack.config.js file.
 // $FlowFixMe
 import iframeScript from 'iframeScript';
 
-import type { ErrorRecord } from './listenToRuntimeErrors';
-import type { ErrorLocation } from './utils/parseCompileError';
+import type { ErrorRecord } from './listenToRuntimeErrors.ts';
+import type { ErrorLocation } from './utils/parseCompileError.ts';
 
 type RuntimeReportingOptions = {|
   onError: () => void,

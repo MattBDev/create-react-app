@@ -7,6 +7,6 @@
 
 'use strict';
 
-const chalk = require('chalk');
+const picocolors = require('picocolors');
 
-module.exports = chalk;
+module.exports = picocolors;

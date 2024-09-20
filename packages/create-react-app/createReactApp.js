@@ -30,7 +30,7 @@
 'use strict';
 
 const https = require('https');
-const chalk = require('chalk');
+const chalk = require('picocolors');
 const commander = require('commander');
 const dns = require('dns');
 const envinfo = require('envinfo');
@@ -157,7 +157,6 @@ function init() {
           Browsers: [
             'Chrome',
             'Edge',
-            'Internet Explorer',
             'Firefox',
             'Safari',
           ],
@@ -204,7 +203,7 @@ function init() {
       }
     })
     .then(latest => {
-      if (latest && semver.lt(packageJson.version, latest)) {
+      if (latest && (Bun.semver.order(packageJson.version, latest) == -1)) {
         console.log();
         console.error(
           chalk.yellow(

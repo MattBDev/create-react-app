@@ -21,29 +21,28 @@ process.on('unhandledRejection', err => {
 
 // Ensure environment variables are read.
 require('../config/env');
-
-const fs = require('fs');
-const chalk = require('react-dev-utils/chalk');
-const webpack = require('webpack');
+console.log("Hello World.");
+import { existsSync } from 'fs';
+const picocolors = require('react-dev-utils/chalk');
+import webpack from 'webpack';
 const WebpackDevServer = require('webpack-dev-server');
-const clearConsole = require('react-dev-utils/clearConsole');
-const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
+import clearConsole from 'react-dev-utils/clearConsole';
+import checkRequiredFiles from 'react-dev-utils/checkRequiredFiles';
 const {
   choosePort,
   createCompiler,
   prepareProxy,
   prepareUrls,
-} = require('react-dev-utils/WebpackDevServerUtils');
+} = require('react-dev-utils/WebpackDevServerUtils.ts').default;
 const openBrowser = require('react-dev-utils/openBrowser');
-const semver = require('semver');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
-const createDevServerConfig = require('../config/webpackDevServer.config');
+const createDevServerConfig = require('../config/webpackDevServer.config.ts');
 const getClientEnvironment = require('../config/env');
 const react = require(require.resolve('react', { paths: [paths.appPath] }));
-
+console.log("Got to line 45. 🤔");
 const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-const useYarn = fs.existsSync(paths.yarnLockFile);
+const useYarn = await Bun.file(paths.yarnLockFile).exists();
 const isInteractive = process.stdout.isTTY;
 
 // Warn and crash if required files are missing
@@ -57,9 +56,9 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 if (process.env.HOST) {
   console.log(
-    chalk.cyan(
-      `Attempting to bind to HOST environment variable: ${chalk.yellow(
-        chalk.bold(process.env.HOST)
+    picocolors.cyan(
+      `Attempting to bind to HOST environment variable: ${picocolors.yellow(
+        picocolors.bold(process.env.HOST)
       )}`
     )
   );
@@ -67,7 +66,7 @@ if (process.env.HOST) {
     `If this was unintentional, check that you haven't mistakenly set it in your shell.`
   );
   console.log(
-    `Learn more here: ${chalk.yellow('https://cra.link/advanced-config')}`
+    `Learn more here: ${picocolors.yellow('https://cra.link/advanced-config')}`
   );
   console.log();
 }
@@ -75,6 +74,7 @@ if (process.env.HOST) {
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 const { checkBrowsers } = require('react-dev-utils/browsersHelper');
+console.log(picocolors.italic("Got to line 79. 🤔"));
 checkBrowsers(paths.appPath, isInteractive)
   .then(() => {
     // We attempt to use the default port but if it is busy, we offer the user to
@@ -91,7 +91,7 @@ checkBrowsers(paths.appPath, isInteractive)
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const appName = require(paths.appPackageJson).name;
 
-    const useTypeScript = fs.existsSync(paths.appTsConfig);
+    const useTypeScript = existsSync(paths.appTsConfig);
     const urls = prepareUrls(
       protocol,
       HOST,
@@ -107,6 +107,8 @@ checkBrowsers(paths.appPath, isInteractive)
       useTypeScript,
       webpack,
     });
+    console.log("Got to line 112. 🤔");
+    console.log(paths.appPackageJson);
     // Load proxy config
     const proxySetting = require(paths.appPackageJson).proxy;
     const proxyConfig = prepareProxy(
@@ -126,37 +128,41 @@ checkBrowsers(paths.appPath, isInteractive)
       if (isInteractive) {
         clearConsole();
       }
-
-      if (env.raw.FAST_REFRESH && semver.lt(react.version, '16.10.0')) {
+      console.log("env.raw.FAST_REFRESH was " + env.raw.FAST_REFRESH);
+      if (env.raw.FAST_REFRESH && Bun.semver.satisfies(react.version, '<=16.10.0')) {
         console.log(
-          chalk.yellow(
-            `Fast Refresh requires React 16.10 or higher. You are using React ${react.version}.`
+          picocolors.yellow(
+        `Fast Refresh requires React 16.10 or higher. You are using React ${react.version}.`
           )
         );
       }
 
-      console.log(chalk.cyan('Starting the development server...\n'));
+      console.log(picocolors.cyan('Starting the development server...\n'));
       openBrowser(urls.localUrlForBrowser);
     });
 
     ['SIGINT', 'SIGTERM'].forEach(function (sig) {
       process.on(sig, function () {
-        devServer.close();
-        process.exit();
+        devServer.stop().then(() => {
+          process.exit();
+        });
       });
     });
 
     if (process.env.CI !== 'true') {
       // Gracefully exit when stdin ends
       process.stdin.on('end', function () {
-        devServer.close();
-        process.exit();
+        devServer.stop().then(() => {
+          process.exit();
+        });
       });
     }
   })
   .catch(err => {
     if (err && err.message) {
       console.log(err.message);
+      //print stack trace
+      console.log(err);
     }
     process.exit(1);
   });

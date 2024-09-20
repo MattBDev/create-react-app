@@ -10,7 +10,6 @@
 const pico = require('picocolors');
 const url = require('url');
 const globalModules = require('global-modules');
-const fs = require('fs');
 
 function printHostingInstructions(
   appPackage,
@@ -112,15 +111,16 @@ function printDeployInstructions(publicUrl, hasDeployScript, useYarn) {
 function printStaticServerInstructions(buildFolder, useYarn) {
   console.log('You may serve it with a static server:');
   console.log();
-
-  if (!fs.existsSync(`${globalModules}/serve`)) {
-    if (useYarn) {
-      console.log(`  ${pico.cyan('yarn')} global add serve`);
-    } else {
-      console.log(`  ${pico.cyan('npm')} install -g serve`);
+  Bun.file(`${globalModules}/serve`).exists().then(exists => {
+    if (!exists) {
+      if (useYarn) {
+        console.log(`  ${pico.cyan('yarn')} global add serve`);
+      } else {
+        console.log(`  ${pico.cyan('npm')} install -g serve`);
+      }
     }
-  }
-  console.log(`  ${pico.cyan('serve')} -s ${buildFolder}`);
+    console.log(`  ${pico.cyan('serve')} -s ${buildFolder}`);
+  });
 }
 
 module.exports = printHostingInstructions;

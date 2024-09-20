@@ -79,7 +79,7 @@ const darkTheme: Theme = {
   background: '#353535',
   color: 'white',
   headerColor: '#e83b46',
-  primaryPreBackground: 'rgba(206, 17, 38, 0.1)',
+  primaryPreBackground: 'rgb(16, 129, 206)',
   primaryPreColor: '#fccfcf',
   secondaryPreBackground: 'rgba(251, 245, 180, 0.1)',
   secondaryPreColor: '#fbf5b4',
